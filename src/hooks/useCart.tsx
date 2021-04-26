@@ -1,3 +1,4 @@
+
 import { createContext, ReactNode, useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import { api } from '../services/api';
@@ -23,18 +24,31 @@ const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Product[]>(() => {
-    // const storagedCart = Buscar dados do localStorage
 
-    // if (storagedCart) {
-    //   return JSON.parse(storagedCart);
-    // }
+    const storagedCart = localStorage.getItem('@RocketShoes:cart');
+
+    if (storagedCart) {
+      return JSON.parse(storagedCart);
+    }
 
     return [];
   });
 
   const addProduct = async (productId: number) => {
     try {
-      // TODO
+
+      const isProductIsIntheCart = cart.find(p => p.id == productId);
+
+      if (!isProductIsIntheCart) {
+        const { data: product } = await api.get(`/products/${productId}`);
+        const { data: stock } = await api.get(`/stock/${productId}`);
+        setCart([...cart, { ...product, amount: Number(1) }])
+      } else {
+        const updatedCart = cart.map(prod => prod.id == productId ?
+          { ...prod, amount: prod.amount++ } : prod)
+        setCart(updatedCart)
+      }
+
     } catch {
       // TODO
     }
