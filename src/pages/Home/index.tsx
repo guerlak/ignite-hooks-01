@@ -41,7 +41,7 @@ const Home = (): JSX.Element => {
       // TODO
       api.get("products").then(res => {
         setProducts(res.data);
-        localStorage.setItem('@RocketShoes:cart', JSON.stringify(res.data))
+        // localStorage.setItem('@RocketShoes:cart', JSON.stringify(res.data))
       })
     }
 

@@ -35,6 +35,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   });
 
   const addProduct = async (productId: number) => {
+
     try {
 
       const isProductIsIntheCart = cart.find(p => p.id == productId);
@@ -44,13 +45,14 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         const { data: stock } = await api.get(`/stock/${productId}`);
         setCart([...cart, { ...product, amount: Number(1) }])
       } else {
+        console.log("update")
         const updatedCart = cart.map(prod => prod.id == productId ?
-          { ...prod, amount: prod.amount++ } : prod)
+          { ...prod, amount: prod.amount + 1 } : prod)
         setCart(updatedCart)
       }
 
     } catch {
-      // TODO
+      toast.error("Erro ao adicionar produto, tente de novo.")
     }
   };
 
@@ -67,9 +69,11 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // TODO
+      const updatedCart = cart.map(prod => prod.id == productId ?
+        { ...prod, amount: amount } : prod)
+      setCart(updatedCart)
     } catch {
-      // TODO
+      toast.error("Erro ao adicionar produto, tente de novo.")
     }
   };
 
