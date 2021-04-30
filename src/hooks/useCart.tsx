@@ -59,6 +59,9 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const removeProduct = (productId: number) => {
     try {
       // TODO
+      const updatedCart = cart.filter(prod => prod.id != productId);
+      setCart(updatedCart);
+
     } catch {
       // TODO
     }
@@ -70,8 +73,9 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   }: UpdateProductAmount) => {
     try {
       const updatedCart = cart.map(prod => prod.id == productId ?
-        { ...prod, amount: amount } : prod)
-      setCart(updatedCart)
+        { ...prod, amount: prod.amount + amount } : prod)
+      setCart(updatedCart);
+
     } catch {
       toast.error("Erro ao adicionar produto, tente de novo.")
     }
@@ -88,6 +92,5 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
 export function useCart(): CartContextData {
   const context = useContext(CartContext);
-
   return context;
 }
